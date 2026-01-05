@@ -21,33 +21,34 @@ This project demonstrates an unsupervised learning workflow for segmenting patie
 
 Below the key plots are embedded so you can quickly compare the raw distribution and the clustered segmentation.
 
-<table>
-  <tr>
-    <td><img src="results/plots/pca_original_vs_cluster.png" alt="PCA original vs clustered" width="360"></td>
-    <td><img src="results/plots/pca_with_centroids.png" alt="PCA with centroids" width="360"></td>
-    <td><img src="results/plots/pairplot_by_cluster.png" alt="Pairplot by cluster" width="360"></td>
-  </tr>
-  <tr>
-    <td align="center">PCA projection: original vs colored by cluster</td>
-    <td align="center">PCA projection with centroids annotated</td>
-    <td align="center">Pairwise relationships and marginal distributions by cluster</td>
-  </tr>
-  <tr>
-    <td><img src="results/plots/boxplots_by_cluster.png" alt="Boxplots by cluster" width="360"></td>
-    <td><img src="results/plots/features_histograms.png" alt="Histograms by cluster" width="360"></td>
-    <td><img src="results/plots/silhouette_plot.png" alt="Silhouette plot" width="360"></td>
-  </tr>
-  <tr>
-    <td align="center">Boxplots: distribution of each vital by cluster</td>
-    <td align="center">Feature histograms, overlaid by cluster</td>
-    <td align="center">Silhouette plot: cluster separation quality</td>
-  </tr>
-</table>
+**PCA projection — original vs colored by cluster**
 
+![](results/plots/pca_original_vs_cluster.png)
 
-<img src="results/plots/cluster_centers_heatmap.png" alt="Cluster centers heatmap" width="760">
+**PCA projection with centroids annotated**
 
-Cluster centers heatmap: average values for each cluster in the original measurement units.
+![](results/plots/pca_with_centroids.png)
+
+**Pairwise relationships and marginal distributions by cluster**
+
+![](results/plots/pairplot_by_cluster.png)
+
+**Boxplots — distribution of each vital by cluster**
+
+![](results/plots/boxplots_by_cluster.png)
+
+**Feature histograms, overlaid by cluster**
+
+![](results/plots/features_histograms.png)
+
+**Silhouette plot — cluster separation quality**
+
+![](results/plots/silhouette_plot.png)
+
+**Cluster centers heatmap — average values for each cluster (original units)**
+
+![](results/plots/cluster_centers_heatmap.png)
+
 
 ---
 
