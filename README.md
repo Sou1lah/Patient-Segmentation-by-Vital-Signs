@@ -205,6 +205,31 @@ The example run in this repository produced 3 clusters (see `results/cluster_cen
 
 ---
 
+## Realtime dashboard (Streamlit)
+
+A realtime simulation dashboard is included at `apps/realtime_dashboard.py` (built with Streamlit) to demonstrate a monitor-style live view of patient vitals and clustering.
+
+Key features:
+
+- **Theme:** `Monitor` (default) — dark monitor-style UI with neon-like colors and large numeric displays.
+- **SpO2:** Oxygen saturation is simulated and displayed in patient cards and plot hover info.
+- **Update every second (lock):** Use the sidebar checkbox **`Update every second (lock)`** (defaults to checked) to force updates at exactly **1.0 s** per tick.
+- **Controls:** Theme, number of patients, K (clusters), update interval (when unlocked), batch size, fluctuation magnitude, history length, random seed, and Start/Stop.
+
+Run the dashboard locally:
+
+```bash
+pip install streamlit plotly scikit-learn pandas numpy
+streamlit run apps/realtime_dashboard.py
+```
+
+Notes:
+
+- This dashboard uses simulated data for demo purposes; replace with live data sources for real deployments.
+- If you want additional monitor elements (e.g., large persistent HR display or waveform panels), open an issue or request enhancements.
+
+---
+
 ## Files of interest 
 
 - `dataset/cleaned/aggregated_vitals_cleaned.csv` — cleaned patient table
