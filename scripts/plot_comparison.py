@@ -46,7 +46,37 @@ else:
     merged = df_clusters.copy()
 
 features = ['Systolic_BP', 'Diastolic_BP', 'Heart_Rate', 'Oxygen_Saturation', 'Temperature']
-X = merged[features].values
+# Ensure required columns exist and are numeric
+missing = [f for f in features if f not in merged.columns]
+if missing:
+    raise KeyError(f"Missing required feature columns in merged data: {missing}")
+
+# Explicit conversion to numeric and NaN checks
+merged[features] = merged[features].apply(pd.to_numeric, errors='raise')
+if merged[features].isnull().values.any():
+    raise ValueError('Found NaN values in feature columns; please inspect dataset/cleaned files')
+
+# Attempt to load hierarchical cluster labels (optional)
+HIER_FILE = os.path.join(BASE_DIR, 'results', 'hierarchical_clusters.csv')
+hier_loaded = False
+if os.path.exists(HIER_FILE):
+    try:
+        hdf = pd.read_csv(HIER_FILE)
+        if 'Subject_ID' in merged.columns and 'Subject_ID' in hdf.columns and 'Cluster' in hdf.columns:
+            merged = pd.merge(merged, hdf[['Subject_ID', 'Cluster']].rename(columns={'Cluster':'Hierarchical_Cluster'}), on='Subject_ID', how='left')
+            hier_loaded = True
+        elif 'Cluster' in hdf.columns and hdf.shape[0] == merged.shape[0]:
+            merged['Hierarchical_Cluster'] = hdf['Cluster'].astype(int).values
+            hier_loaded = True
+        else:
+            print('Found hierarchical_clusters.csv but could not align rows to current data; hierarchical plots will be skipped.')
+    except Exception as e:
+        print(f'Could not read hierarchical clusters file: {e}')
+
+# Prepare numeric array for PCA
+X = merged[features].to_numpy(dtype=float)
+if np.isnan(X).any():
+    raise ValueError('Found NaN values in feature array X; please inspect dataset/cleaned files')
 
 # Standardize for PCA
 scaler = StandardScaler()
@@ -100,6 +130,54 @@ try:
 except Exception as e:
     print(f"Could not compute centroids plot: {e}")
 
+# If hierarchical clusters are available, plot PCA and silhouette for them
+if 'Hierarchical_Cluster' in merged.columns and not merged['Hierarchical_Cluster'].isnull().all():
+    try:
+        clusters_h = merged['Hierarchical_Cluster'].astype(int)
+        plt.figure(figsize=(6,5))
+        scatter_h = plt.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters_h, cmap='tab10', edgecolor='k', alpha=0.9)
+        legend_h = plt.legend(*scatter_h.legend_elements(), title='Hier. Cluster', loc='best')
+        plt.gca().add_artist(legend_h)
+        plt.title('PCA: Hierarchical Clusters')
+        plt.xlabel('PC1')
+        plt.ylabel('PC2')
+        pca_h_out = os.path.join(OUT_DIR, 'pca_hierarchical.png')
+        plt.tight_layout()
+        plt.savefig(pca_h_out, dpi=200)
+        plt.close()
+        print(f"Saved: {pca_h_out}")
+    except Exception as e:
+        print(f"Could not plot PCA for hierarchical clusters: {e}")
+
+    # Silhouette plot for hierarchical clusters
+    try:
+        if len(np.unique(clusters_h)) >= 2:
+            from sklearn.metrics import silhouette_samples, silhouette_score
+            sil_vals_h = silhouette_samples(X_scaled, clusters_h)
+            sil_avg_h = silhouette_score(X_scaled, clusters_h)
+            plt.figure(figsize=(8, 6))
+            y_lower = 10
+            for i in range(len(np.unique(clusters_h))):
+                ith_vals = sil_vals_h[clusters_h == i]
+                ith_vals.sort()
+                size_i = ith_vals.shape[0]
+                y_upper = y_lower + size_i
+                color = sns.color_palette('tab10')[i % 10]
+                plt.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_vals, facecolor=color, edgecolor=color, alpha=0.7)
+                plt.text(-0.05, y_lower + 0.5 * size_i, f'Cluster {i}')
+                y_lower = y_upper + 10
+            plt.axvline(sil_avg_h, color='red', linestyle='--')
+            plt.xlabel('Silhouette coefficient')
+            plt.ylabel('Cluster')
+            plt.title(f'Hierarchical Silhouette plot (avg = {sil_avg_h:.3f})')
+            sil_h_out = os.path.join(OUT_DIR, 'silhouette_plot_hierarchical.png')
+            plt.tight_layout()
+            plt.savefig(sil_h_out, dpi=200)
+            plt.close()
+            print(f"Saved: {sil_h_out}")
+    except Exception as e:
+        print(f"Could not compute silhouette for hierarchical clusters: {e}")
+
 # Pairplot colored by cluster (smaller size for readability)
 try:
     gp = sns.pairplot(merged, vars=features, hue='Cluster', diag_kind='hist', corner=False, plot_kws={'alpha':0.6, 's':20})
@@ -109,6 +187,17 @@ try:
     print(f"Saved: {pair_out}")
 except Exception as e:
     print(f"Pairplot failed: {e}")
+
+# If hierarchical exists, also do pairplot by hierarchical cluster
+if 'Hierarchical_Cluster' in merged.columns and not merged['Hierarchical_Cluster'].isnull().all():
+    try:
+        gp2 = sns.pairplot(merged, vars=features, hue='Hierarchical_Cluster', diag_kind='hist', corner=False, plot_kws={'alpha':0.6, 's':20})
+        pair_h_out = os.path.join(OUT_DIR, 'pairplot_by_hierarchical.png')
+        gp2.savefig(pair_h_out)
+        plt.close()
+        print(f"Saved: {pair_h_out}")
+    except Exception as e:
+        print(f"Pairplot by hierarchical cluster failed: {e}")
 
 # Histograms of features colored by cluster
 plt.figure(figsize=(12, 10))

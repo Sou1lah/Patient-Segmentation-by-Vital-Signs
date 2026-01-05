@@ -31,10 +31,11 @@
   * [x]  Use **elbow method** to determine optimal K
   * [x]  Fit K-Means with chosen K
   * [x]  Assign cluster labels to patients
-* [ ]  **Hierarchical Clustering (optional)**
+* [x]  **Hierarchical Clustering (optional)**
 
-  * [ ]  Generate dendrogram to explore clusters
-  * [ ]  Decide cut-off to form clusters
+  * [x]  Generate dendrogram to explore clusters
+  * [x]  Decide cut-off to form clusters
+  * [x]  Notebook added: `notebooks/03_cluster_analysis.ipynb` (dendrogram + stability analysis)
 
 ---
 

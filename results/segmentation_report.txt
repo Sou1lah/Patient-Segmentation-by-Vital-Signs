@@ -27,3 +27,28 @@ Cluster 2: 38 patients (37.3%)
     5. Treatment Planning: Personalized treatment plans based on cluster profiles
 
     
+### Hierarchical & Stability Analysis
+Number of clusters (reference KMeans): 3
+Adjusted Rand Index (KMeans vs Agglomerative): 0.170
+KMeans silhouette: 0.176, bootstrap ARI mean: 0.541 ± 0.179
+Agglomerative silhouette: 0.154, bootstrap ARI mean: 0.352 ± 0.135
+
+### Hierarchical & Stability Analysis
+Number of clusters (reference KMeans): 3
+Adjusted Rand Index (KMeans vs Agglomerative): 0.170
+KMeans silhouette: 0.176, bootstrap ARI mean: 0.541 ± 0.179
+Agglomerative silhouette: 0.154, bootstrap ARI mean: 0.352 ± 0.135
+
+### Hierarchical & Stability Analysis
+Number of clusters (reference KMeans): 3
+Adjusted Rand Index (KMeans vs Agglomerative): 0.170
+KMeans silhouette: 0.176, bootstrap ARI mean: 0.541 ± 0.179
+Agglomerative silhouette: 0.154, bootstrap ARI mean: 0.352 ± 0.135
+
+### Hierarchical & Stability Analysis
+Number of clusters (reference KMeans): 3
+Adjusted Rand Index (KMeans vs Agglomerative): 0.170
+Adjusted Rand Index (KMeans vs Hierarchical): 0.170
+KMeans silhouette: 0.176, bootstrap ARI mean: 0.541 ± 0.179
+Agglomerative silhouette: 0.154, bootstrap ARI mean: 0.352 ± 0.135
+Hierarchical silhouette: 0.154, bootstrap ARI mean: -0.003 ± 0.005

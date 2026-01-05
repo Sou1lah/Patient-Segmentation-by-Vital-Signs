@@ -1,0 +1,7 @@
+method,n_clusters,silhouette,stability_ari_mean,stability_ari_std
+kmeans_existing,3,0.17624572955634277,0.5411539747225504,0.17868032766274447
+agglomerative,3,0.1536915031988399,0.352484909969649,0.13505174325193955
+hierarchical,3,0.1536915031988399,-0.003274914617203194,0.005246299644605311
+kmeans_vs_agglomerative_ARI,3,,0.1695359170028748,
+kmeans_vs_hierarchical_ARI,3,,0.1695359170028748,
+agglomerative_vs_hierarchical_ARI,3,,1.0,
