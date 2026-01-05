@@ -1,5 +1,3 @@
-# Patient Segmentation by Vital Signs
-
 ![Patient Segmentation Header](assets/header.webp)
 
 # Patient Segmentation by Vital Signs
@@ -204,31 +202,6 @@ The example run in this repository produced 3 clusters (see `results/cluster_cen
 - Add time-series clustering to incorporate temporal changes in vitals.
 - Integrate more features (laboratory values, demographics) and test supervised approaches for outcome prediction.
 - Use external clinical datasets to validate cluster generalizability.
-
----
-
-## Quick start — how to run
-
-1. Create an environment and install dependencies (example):
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt  # or pip install numpy pandas scipy scikit-learn matplotlib seaborn ipywidgets pytest
-```
-
-2. Run notebooks in order:
-
-- `notebooks/01_data_cleaning.ipynb`  (clean + scale)
-- `notebooks/02_training_clustering.ipynb`  (KMeans analysis)
-- `notebooks/03_cluster_analysis.ipynb`  (hierarchical + stability)
-
-3. Or run scripts:
-
-- `python3 scripts/cluster_analysis.py`
-- `python3 scripts/plot_comparison.py`
-
-Outputs will be saved under `results/` and `results/plots/`.
 
 ---
 
