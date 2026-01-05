@@ -1,0 +1,29 @@
+
+    PATIENT SEGMENTATION BY VITAL SIGNS - SUMMARY REPORT
+    ======================================================================
+
+    Dataset: 102 patients
+    Optimal Number of Clusters: 3
+
+    CLUSTER SUMMARY:
+    ----------------------------------------------------------------------
+    
+Cluster 0: 26 patients (25.5%)
+  Description: MODERATE RISK - Requires Monitoring
+
+Cluster 1: 38 patients (37.3%)
+  Description: MODERATE RISK - Requires Monitoring
+
+Cluster 2: 38 patients (37.3%)
+  Description: LOW RISK - Healthy Patients
+
+    ----------------------------------------------------------------------
+
+    APPLICATIONS:
+    1. Patient Risk Stratification: Identify high-risk patients needing intervention
+    2. Clinical Triage: Categorize patients for appropriate care pathways
+    3. Preventive Care: Target specific interventions for each segment
+    4. Resource Allocation: Optimize hospital resources based on patient segments
+    5. Treatment Planning: Personalized treatment plans based on cluster profiles
+
+    
