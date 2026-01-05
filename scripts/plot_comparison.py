@@ -79,7 +79,81 @@ plt.savefig(pca_out, dpi=200)
 plt.close()
 print(f"Saved: {pca_out}")
 
-# Boxplots per cluster for each vital
+# PCA with cluster centroids
+try:
+    centers_df = merged.groupby('Cluster')[features].mean().sort_index()
+    centers_scaled = scaler.transform(centers_df.values)
+    centers_pca = pca.transform(centers_scaled)
+    plt.figure(figsize=(6, 5))
+    plt.scatter(X_pca[:, 0], X_pca[:, 1], c=clusters, cmap='tab10', alpha=0.7, edgecolor='k')
+    for i, (x, y) in enumerate(centers_pca):
+        plt.scatter(x, y, s=200, marker='X', c=[sns.color_palette('tab10')[i % 10]], edgecolor='k')
+        plt.text(x + 0.02, y + 0.02, f'Center {i}', fontsize=9)
+    plt.title('PCA: Clusters with Centroids')
+    plt.xlabel('PC1')
+    plt.ylabel('PC2')
+    cent_out = os.path.join(OUT_DIR, 'pca_with_centroids.png')
+    plt.tight_layout()
+    plt.savefig(cent_out, dpi=200)
+    plt.close()
+    print(f"Saved: {cent_out}")
+except Exception as e:
+    print(f"Could not compute centroids plot: {e}")
+
+# Pairplot colored by cluster (smaller size for readability)
+try:
+    gp = sns.pairplot(merged, vars=features, hue='Cluster', diag_kind='hist', corner=False, plot_kws={'alpha':0.6, 's':20})
+    pair_out = os.path.join(OUT_DIR, 'pairplot_by_cluster.png')
+    gp.savefig(pair_out)
+    plt.close()
+    print(f"Saved: {pair_out}")
+except Exception as e:
+    print(f"Pairplot failed: {e}")
+
+# Histograms of features colored by cluster
+plt.figure(figsize=(12, 10))
+for i, feat in enumerate(features, 1):
+    plt.subplot(3, 2, i)
+    for c in sorted(merged['Cluster'].unique()):
+        sns.histplot(merged[merged['Cluster'] == c][feat], stat='density', kde=False, label=f'Cluster {int(c)}', alpha=0.5)
+    plt.title(f'Histogram: {feat} by Cluster')
+    plt.legend()
+    plt.tight_layout()
+hist_out = os.path.join(OUT_DIR, 'features_histograms.png')
+plt.savefig(hist_out, dpi=200)
+plt.close()
+print(f"Saved: {hist_out}")
+
+# Silhouette plot
+from sklearn.metrics import silhouette_samples, silhouette_score
+n_clusters = len(np.unique(clusters))
+if n_clusters >= 2:
+    sil_vals = silhouette_samples(X_scaled, clusters)
+    sil_avg = silhouette_score(X_scaled, clusters)
+    plt.figure(figsize=(8, 6))
+    y_lower = 10
+    for i in range(n_clusters):
+        ith_sil_vals = sil_vals[clusters == i]
+        ith_sil_vals.sort()
+        size_i = ith_sil_vals.shape[0]
+        y_upper = y_lower + size_i
+        color = sns.color_palette('tab10')[i % 10]
+        plt.fill_betweenx(np.arange(y_lower, y_upper), 0, ith_sil_vals, facecolor=color, edgecolor=color, alpha=0.7)
+        plt.text(-0.05, y_lower + 0.5 * size_i, f'Cluster {i}')
+        y_lower = y_upper + 10
+    plt.axvline(sil_avg, color='red', linestyle='--')
+    plt.xlabel('Silhouette coefficient')
+    plt.ylabel('Cluster')
+    plt.title(f'Silhouette plot (avg = {sil_avg:.3f})')
+    sil_out = os.path.join(OUT_DIR, 'silhouette_plot.png')
+    plt.tight_layout()
+    plt.savefig(sil_out, dpi=200)
+    plt.close()
+    print(f"Saved: {sil_out}")
+else:
+    print('Not enough clusters to compute silhouette scores (need >=2).')
+
+# Boxplots per cluster for each vital (existing)
 plt.figure(figsize=(12, 9))
 for i, feat in enumerate(features, 1):
     plt.subplot(3, 2, i)
